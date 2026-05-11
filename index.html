@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>8th Grade Science MCAS Jeopardy</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #061a40;
+      color: white;
+      text-align: center;
+    }
+
+    h1 {
+      background-color: #0353a4;
+      margin: 0;
+      padding: 20px;
+      font-size: 40px;
+      letter-spacing: 2px;
+    }
+
+    #board {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 5px;
+      padding: 10px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .category {
+      background-color: #023e7d;
+      padding: 15px;
+      font-weight: bold;
+      font-size: 20px;
+      min-height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cell {
+      background-color: #0466c8;
+      color: gold;
+      font-size: 32px;
+      font-weight: bold;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .cell:hover {
+      background-color: #0353a4;
+      transform: scale(1.03);
+    }
+
+    .used {
+      background-color: #222;
+      color: #444;
+      cursor: default;
+    }
+
+    #modal {
+      position: fixed;
+      display: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    #modal-content {
+      background: #023e7d;
+      padding: 30px;
+      border-radius: 15px;
+      width: 80%;
+      max-width: 900px;
+    }
+
+    #question {
+      font-size: 32px;
+      margin-bottom: 20px;
+    }
+
+    #answer {
+      display: none;
+      font-size: 28px;
+      color: gold;
+      margin-top: 20px;
+    }
+
+    button {
+      margin: 10px;
+      padding: 12px 24px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      background-color: gold;
+      color: black;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: orange;
+    }
+
+    @media (max-width: 768px) {
+      .cell {
+        font-size: 20px;
+        height: 70px;
+      }
+
+      .category {
+        font-size: 14px;
+      }
+
+      #question {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+<h1>8th Grade Science MCAS Jeopardy</h1>
+
+<div id="board"></div>
+
+<div id="modal">
+  <div id="modal-content">
+    <div id="question"></div>
+    <div id="answer"></div>
+
+    <button onclick="showAnswer()">Show Answer</button>
+    <button onclick="closeModal()">Close</button>
+  </div>
+</div>
+
+<script>
+
+const categories = [
+  {
+    name: "Cells & Body Systems",
+    questions: [
+      {
+        value: 100,
+        q: "What organelle controls the activities of the cell?",
+        a: "The nucleus."
+      },
+      {
+        value: 200,
+        q: "What body system transports oxygen and nutrients throughout the body?",
+        a: "The circulatory system."
+      },
+      {
+        value: 300,
+        q: "Which organ system removes waste from the blood?",
+        a: "The excretory (urinary) system."
+      },
+      {
+        value: 400,
+        q: "What process allows plants to make their own food?",
+        a: "Photosynthesis."
+      },
+      {
+        value: 500,
+        q: "What is the function of mitochondria?",
+        a: "They produce energy for the cell."
+      }
+    ]
+  },
+
+  {
+    name: "Forces & Motion",
+    questions: [
+      {
+        value: 100,
+        q: "What force pulls objects toward Earth?",
+        a: "Gravity."
+      },
+      {
+        value: 200,
+        q: "What is the formula for speed?",
+        a: "Speed = distance ÷ time."
+      },
+      {
+        value: 300,
+        q: "What happens to an object when forces are balanced?",
+        a: "Its motion does not change."
+      },
+      {
+        value: 400,
+        q: "What type of energy does a moving object have?",
+        a: "Kinetic energy."
+      },
+      {
+        value: 500,
+        q: "Newton’s First Law is also called what?",
+        a: "The Law of Inertia."
+      }
+    ]
+  },
+
+  {
+    name: "Earth & Space",
+    questions: [
+      {
+        value: 100,
+        q: "What causes day and night on Earth?",
+        a: "Earth’s rotation."
+      },
+      {
+        value: 200,
+        q: "What is the layer of gases surrounding Earth?",
+        a: "The atmosphere."
+      },
+      {
+        value: 300,
+        q: "What causes the seasons?",
+        a: "Earth’s tilt and orbit around the Sun."
+      },
+      {
+        value: 400,
+        q: "What type of rock forms from cooled magma or lava?",
+        a: "Igneous rock."
+      },
+      {
+        value: 500,
+        q: "What is the name of our galaxy?",
+        a: "The Milky Way."
+      }
+    ]
+  },
+
+  {
+    name: "Chemistry",
+    questions: [
+      {
+        value: 100,
+        q: "What is the smallest unit of matter?",
+        a: "An atom."
+      },
+      {
+        value: 200,
+        q: "What are substances made of two or more elements called?",
+        a: "Compounds."
+      },
+      {
+        value: 300,
+        q: "What is the pH of a neutral substance?",
+        a: "7."
+      },
+      {
+        value: 400,
+        q: "What state of matter has no definite shape or volume?",
+        a: "Gas."
+      },
+      {
+        value: 500,
+        q: "What happens during a chemical reaction?",
+        a: "New substances are formed."
+      }
+    ]
+  },
+
+  {
+    name: "Scientific Thinking",
+    questions: [
+      {
+        value: 100,
+        q: "What is the variable that is changed in an experiment?",
+        a: "The independent variable."
+      },
+      {
+        value: 200,
+        q: "What tool measures temperature?",
+        a: "A thermometer."
+      },
+      {
+        value: 300,
+        q: "Why do scientists repeat experiments?",
+        a: "To make sure results are reliable."
+      },
+      {
+        value: 400,
+        q: "What is a prediction based on observations called?",
+        a: "A hypothesis."
+      },
+      {
+        value: 500,
+        q: "What should stay the same during a fair test?",
+        a: "The controlled variables (constants)."
+      }
+    ]
+  }
+];
+
+const board = document.getElementById("board");
+
+categories.forEach(category => {
+  const catDiv = document.createElement("div");
+  catDiv.classList.add("category");
+  catDiv.innerText = category.name;
+  board.appendChild(catDiv);
+});
+
+for (let row = 0; row < 5; row++) {
+  categories.forEach((category, col) => {
+
+    const question = category.questions[row];
+
+    const cell = document.createElement("div");
+    cell.classList.add("cell");
+    cell.innerText = "$" + question.value;
+
+    cell.onclick = () => {
+      if (!cell.classList.contains("used")) {
+        openModal(question.q, question.a);
+        cell.classList.add("used");
+        cell.innerText = "";
+      }
+    };
+
+    board.appendChild(cell);
+  });
+}
+
+function openModal(question, answer) {
+  document.getElementById("modal").style.display = "flex";
+  document.getElementById("question").innerText = question;
+  document.getElementById("answer").innerText = answer;
+  document.getElementById("answer").style.display = "none";
+}
+
+function showAnswer() {
+  document.getElementById("answer").style.display = "block";
+}
+
+function closeModal() {
+  document.getElementById("modal").style.display = "none";
+}
+
+</script>
+
+</body>
+</html>
