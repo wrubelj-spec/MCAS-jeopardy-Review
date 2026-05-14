@@ -3,119 +3,169 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>MCAS Science Jeopardy</title>
+<title>MCAS Science Jeopardy Multiplayer</title>
 
 <style>
-    body{
-        margin:0;
-        font-family:Arial, sans-serif;
-        background:#001f5b;
-        color:white;
-        text-align:center;
-    }
 
-    h1{
-        background:#000d33;
-        margin:0;
-        padding:20px;
-        font-size:3rem;
-        letter-spacing:2px;
-    }
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#001f5b;
+    color:white;
+    text-align:center;
+}
 
-    #scoreBoard{
-        font-size:1.5rem;
-        padding:15px;
-        background:#002b80;
-    }
+h1{
+    background:#000d33;
+    margin:0;
+    padding:20px;
+    font-size:3rem;
+}
 
-    .board{
-        display:grid;
-        grid-template-columns: repeat(5, 1fr);
-        gap:5px;
-        padding:10px;
-    }
+#setupScreen{
+    padding:30px;
+}
 
-    .category{
-        background:#0039a6;
-        padding:20px;
-        font-weight:bold;
-        font-size:1.2rem;
-        border:2px solid white;
-    }
+.playerInput{
+    margin:10px;
+    padding:10px;
+    width:250px;
+    font-size:1rem;
+}
 
-    .cell{
-        background:#0052cc;
-        padding:25px;
-        font-size:2rem;
-        cursor:pointer;
-        border:2px solid white;
-        transition:0.3s;
-    }
+button{
+    padding:12px 20px;
+    font-size:1rem;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+    font-weight:bold;
+}
 
-    .cell:hover{
-        background:#1a75ff;
-        transform:scale(1.03);
-    }
+#startBtn{
+    background:gold;
+    color:black;
+}
 
-    .used{
-        background:#111;
-        color:#444;
-        pointer-events:none;
-    }
+#scoreBoard{
+    display:flex;
+    justify-content:center;
+    gap:20px;
+    flex-wrap:wrap;
+    background:#002b80;
+    padding:15px;
+    font-size:1.2rem;
+}
 
-    #questionModal{
-        position:fixed;
-        top:0;
-        left:0;
-        width:100%;
-        height:100%;
-        background:rgba(0,0,0,0.9);
-        display:none;
-        justify-content:center;
-        align-items:center;
-        z-index:1000;
-    }
+.playerCard{
+    background:#0039a6;
+    padding:10px 20px;
+    border-radius:12px;
+    border:2px solid white;
+}
 
-    #questionBox{
-        background:#002b80;
-        width:80%;
-        max-width:700px;
-        padding:30px;
-        border-radius:15px;
-    }
+.activePlayer{
+    background:gold;
+    color:black;
+}
 
-    .answerBtn{
-        display:block;
-        width:100%;
-        margin:10px 0;
-        padding:15px;
-        font-size:1rem;
-        cursor:pointer;
-        border:none;
-        border-radius:8px;
-        background:white;
-        color:#002b80;
-        font-weight:bold;
-    }
+.board{
+    display:grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap:5px;
+    padding:10px;
+}
 
-    .answerBtn:hover{
-        background:gold;
-    }
+.category{
+    background:#0039a6;
+    padding:20px;
+    font-weight:bold;
+    border:2px solid white;
+}
 
-    #feedback{
-        font-size:1.5rem;
-        margin-top:15px;
-    }
+.cell{
+    background:#0052cc;
+    padding:25px;
+    font-size:2rem;
+    cursor:pointer;
+    border:2px solid white;
+    transition:0.3s;
+}
 
-    #closeBtn{
-        margin-top:20px;
-        padding:10px 20px;
-        font-size:1rem;
-        background:gold;
-        border:none;
-        border-radius:10px;
-        cursor:pointer;
-    }
+.cell:hover{
+    background:#1a75ff;
+    transform:scale(1.03);
+}
+
+.used{
+    background:#111;
+    color:#444;
+    pointer-events:none;
+}
+
+#questionModal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.9);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:1000;
+}
+
+#questionBox{
+    background:#002b80;
+    width:80%;
+    max-width:700px;
+    padding:30px;
+    border-radius:15px;
+}
+
+.answerBtn{
+    display:block;
+    width:100%;
+    margin:10px 0;
+    padding:15px;
+    font-size:1rem;
+    cursor:pointer;
+    border:none;
+    border-radius:8px;
+    background:white;
+    color:#002b80;
+    font-weight:bold;
+}
+
+.answerBtn:hover{
+    background:gold;
+}
+
+#feedback{
+    font-size:1.5rem;
+    margin-top:15px;
+}
+
+#closeBtn{
+    margin-top:20px;
+    background:gold;
+}
+
+#showAnswerBtn{
+    margin-top:15px;
+    background:#ffcc00;
+    color:black;
+}
+
+#showAnswerBtn:hover{
+    background:#ffd633;
+}
+
+#gameContainer{
+    display:none;
+}
+
 </style>
 </head>
 
@@ -123,255 +173,390 @@
 
 <h1>MCAS SCIENCE JEOPARDY</h1>
 
-<div id="scoreBoard">
-    Score: <span id="score">0</span>
+<div id="setupScreen">
+
+    <h2>Enter Up To 4 Players</h2>
+
+    <input class="playerInput" id="p1" placeholder="Player 1 Name"><br>
+    <input class="playerInput" id="p2" placeholder="Player 2 Name"><br>
+    <input class="playerInput" id="p3" placeholder="Player 3 Name"><br>
+    <input class="playerInput" id="p4" placeholder="Player 4 Name"><br>
+
+    <button id="startBtn" onclick="startGame()">Start Game</button>
+
 </div>
 
-<div class="board" id="board"></div>
+<div id="gameContainer">
+
+    <div id="scoreBoard"></div>
+
+    <div class="board" id="board"></div>
+
+</div>
 
 <div id="questionModal">
+
     <div id="questionBox">
+
         <h2 id="questionText"></h2>
 
         <div id="answers"></div>
 
+        <button id="showAnswerBtn" onclick="showCorrectAnswer()">
+            Show Correct Answer
+        </button>
+
         <div id="feedback"></div>
 
-        <button id="closeBtn" onclick="closeModal()">Continue</button>
+        <button id="closeBtn" onclick="closeModal()">
+            Continue
+        </button>
+
     </div>
+
 </div>
 
 <script>
 
+// SOUND EFFECTS
+
+const correctSound = new Audio("https://actions.google.com/sounds/v1/cartoon/clang_and_wobble.ogg");
+
+const wrongSound = new Audio("https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg");
+
+const clickSound = new Audio("https://actions.google.com/sounds/v1/cartoon/pop.ogg");
+
+// GAME VARIABLES
+
+let players = [];
+let currentPlayer = 0;
+let currentValue = 0;
+let currentCorrectAnswer = "";
+
+// QUESTIONS
+
 const categories = [
-    {
-        name:"Life Science",
-        questions:[
-            {
-                value:100,
-                question:"What process allows plants to make food using sunlight?",
-                answers:["Respiration","Photosynthesis","Digestion","Fermentation"],
-                correct:1
-            },
-            {
-                value:200,
-                question:"Which organelle is known as the powerhouse of the cell?",
-                answers:["Nucleus","Cell wall","Mitochondria","Ribosome"],
-                correct:2
-            },
-            {
-                value:300,
-                question:"What type of relationship benefits both organisms?",
-                answers:["Predation","Competition","Mutualism","Parasitism"],
-                correct:2
-            },
-            {
-                value:400,
-                question:"DNA is located in which part of the cell?",
-                answers:["Membrane","Nucleus","Cytoplasm","Vacuole"],
-                correct:1
-            },
-            {
-                value:500,
-                question:"Which system helps transport oxygen through the body?",
-                answers:["Digestive","Nervous","Circulatory","Skeletal"],
-                correct:2
-            }
-        ]
-    },
 
-    {
-        name:"Earth Science",
-        questions:[
-            {
-                value:100,
-                question:"What causes day and night?",
-                answers:["Moon phases","Earth rotation","Earth revolution","Gravity"],
-                correct:1
-            },
-            {
-                value:200,
-                question:"What layer of Earth is liquid iron and nickel?",
-                answers:["Crust","Mantle","Outer Core","Inner Core"],
-                correct:2
-            },
-            {
-                value:300,
-                question:"What type of rock forms from cooled magma?",
-                answers:["Sedimentary","Igneous","Metamorphic","Fossil"],
-                correct:1
-            },
-            {
-                value:400,
-                question:"What causes earthquakes?",
-                answers:["Ocean currents","Plate movement","Wind","Rainfall"],
-                correct:1
-            },
-            {
-                value:500,
-                question:"Which planet is known for its rings?",
-                answers:["Mars","Venus","Saturn","Mercury"],
-                correct:2
-            }
-        ]
-    },
+{
+name:"Life Science",
+questions:[
+{
+value:100,
+question:"What process allows plants to make food using sunlight?",
+answers:["Respiration","Photosynthesis","Digestion","Fermentation"],
+correct:1
+},
+{
+value:200,
+question:"Which organelle is known as the powerhouse of the cell?",
+answers:["Nucleus","Cell wall","Mitochondria","Ribosome"],
+correct:2
+},
+{
+value:300,
+question:"What type of relationship benefits both organisms?",
+answers:["Predation","Competition","Mutualism","Parasitism"],
+correct:2
+},
+{
+value:400,
+question:"DNA is located in which part of the cell?",
+answers:["Membrane","Nucleus","Cytoplasm","Vacuole"],
+correct:1
+},
+{
+value:500,
+question:"Which system helps transport oxygen through the body?",
+answers:["Digestive","Nervous","Circulatory","Skeletal"],
+correct:2
+}
+]
+},
 
-    {
-        name:"Physics",
-        questions:[
-            {
-                value:100,
-                question:"What force pulls objects toward Earth?",
-                answers:["Magnetism","Friction","Gravity","Electricity"],
-                correct:2
-            },
-            {
-                value:200,
-                question:"Speed equals distance divided by what?",
-                answers:["Mass","Time","Energy","Force"],
-                correct:1
-            },
-            {
-                value:300,
-                question:"Which simple machine is a ramp?",
-                answers:["Lever","Inclined plane","Pulley","Wheel"],
-                correct:1
-            },
-            {
-                value:400,
-                question:"Energy of motion is called?",
-                answers:["Potential","Thermal","Kinetic","Chemical"],
-                correct:2
-            },
-            {
-                value:500,
-                question:"What unit measures force?",
-                answers:["Joule","Newton","Watt","Volt"],
-                correct:1
-            }
-        ]
-    },
+{
+name:"Earth Science",
+questions:[
+{
+value:100,
+question:"What causes day and night?",
+answers:["Moon phases","Earth rotation","Earth revolution","Gravity"],
+correct:1
+},
+{
+value:200,
+question:"What layer of Earth is liquid iron and nickel?",
+answers:["Crust","Mantle","Outer Core","Inner Core"],
+correct:2
+},
+{
+value:300,
+question:"What type of rock forms from cooled magma?",
+answers:["Sedimentary","Igneous","Metamorphic","Fossil"],
+correct:1
+},
+{
+value:400,
+question:"What causes earthquakes?",
+answers:["Ocean currents","Plate movement","Wind","Rainfall"],
+correct:1
+},
+{
+value:500,
+question:"Which planet is known for its rings?",
+answers:["Mars","Venus","Saturn","Mercury"],
+correct:2
+}
+]
+},
 
-    {
-        name:"Chemistry",
-        questions:[
-            {
-                value:100,
-                question:"Water is made of hydrogen and what other element?",
-                answers:["Oxygen","Nitrogen","Carbon","Helium"],
-                correct:0
-            },
-            {
-                value:200,
-                question:"What is the center of an atom called?",
-                answers:["Electron","Nucleus","Proton","Shell"],
-                correct:1
-            },
-            {
-                value:300,
-                question:"A substance with pH less than 7 is:",
-                answers:["Neutral","Basic","Acidic","Metallic"],
-                correct:2
-            },
-            {
-                value:400,
-                question:"What state of matter has definite volume but no definite shape?",
-                answers:["Solid","Gas","Liquid","Plasma"],
-                correct:2
-            },
-            {
-                value:500,
-                question:"Which particle has a negative charge?",
-                answers:["Neutron","Proton","Electron","Nucleus"],
-                correct:2
-            }
-        ]
-    },
+{
+name:"Physics",
+questions:[
+{
+value:100,
+question:"What force pulls objects toward Earth?",
+answers:["Magnetism","Friction","Gravity","Electricity"],
+correct:2
+},
+{
+value:200,
+question:"Speed equals distance divided by what?",
+answers:["Mass","Time","Energy","Force"],
+correct:1
+},
+{
+value:300,
+question:"Which simple machine is a ramp?",
+answers:["Lever","Inclined plane","Pulley","Wheel"],
+correct:1
+},
+{
+value:400,
+question:"Energy of motion is called?",
+answers:["Potential","Thermal","Kinetic","Chemical"],
+correct:2
+},
+{
+value:500,
+question:"What unit measures force?",
+answers:["Joule","Newton","Watt","Volt"],
+correct:1
+}
+]
+},
 
-    {
-        name:"Engineering",
-        questions:[
-            {
-                value:100,
-                question:"Engineers solve problems using what process?",
-                answers:["Water cycle","Engineering design","Photosynthesis","Digestion"],
-                correct:1
-            },
-            {
-                value:200,
-                question:"A prototype is:",
-                answers:["Final product","A test model","A blueprint","A machine"],
-                correct:1
-            },
-            {
-                value:300,
-                question:"Which constraint might affect a design?",
-                answers:["Budget","Color","Weather","Plants"],
-                correct:0
-            },
-            {
-                value:400,
-                question:"Technology is best defined as:",
-                answers:["Only electronics","Tools used to solve problems","Computers only","Machines with batteries"],
-                correct:1
-            },
-            {
-                value:500,
-                question:"What should engineers do after testing a design?",
-                answers:["Ignore results","Redesign if needed","Start over completely","Sell it immediately"],
-                correct:1
-            }
-        ]
-    }
+{
+name:"Chemistry",
+questions:[
+{
+value:100,
+question:"Water is made of hydrogen and what other element?",
+answers:["Oxygen","Nitrogen","Carbon","Helium"],
+correct:0
+},
+{
+value:200,
+question:"What is the center of an atom called?",
+answers:["Electron","Nucleus","Proton","Shell"],
+correct:1
+},
+{
+value:300,
+question:"A substance with pH less than 7 is:",
+answers:["Neutral","Basic","Acidic","Metallic"],
+correct:2
+},
+{
+value:400,
+question:"What state of matter has definite volume but no definite shape?",
+answers:["Solid","Gas","Liquid","Plasma"],
+correct:2
+},
+{
+value:500,
+question:"Which particle has a negative charge?",
+answers:["Neutron","Proton","Electron","Nucleus"],
+correct:2
+}
+]
+},
+
+{
+name:"Engineering",
+questions:[
+{
+value:100,
+question:"Engineers solve problems using what process?",
+answers:["Water cycle","Engineering design","Photosynthesis","Digestion"],
+correct:1
+},
+{
+value:200,
+question:"A prototype is:",
+answers:["Final product","A test model","A blueprint","A machine"],
+correct:1
+},
+{
+value:300,
+question:"Which constraint might affect a design?",
+answers:["Budget","Color","Weather","Plants"],
+correct:0
+},
+{
+value:400,
+question:"Technology is best defined as:",
+answers:["Only electronics","Tools used to solve problems","Computers only","Machines with batteries"],
+correct:1
+},
+{
+value:500,
+question:"What should engineers do after testing a design?",
+answers:["Ignore results","Redesign if needed","Start over completely","Sell it immediately"],
+correct:1
+}
+]
+}
+
 ];
 
-let score = 0;
-let currentValue = 0;
+// START GAME
 
-const board = document.getElementById("board");
+function startGame(){
 
-categories.forEach((cat, cIndex)=>{
+    const names = [
+        document.getElementById("p1").value,
+        document.getElementById("p2").value,
+        document.getElementById("p3").value,
+        document.getElementById("p4").value
+    ];
 
-    const header = document.createElement("div");
-    header.className = "category";
-    header.innerText = cat.name;
-    board.appendChild(header);
+    players = [];
 
-});
+    names.forEach(name => {
 
-for(let row=0; row<5; row++){
+        if(name.trim() !== ""){
 
-    categories.forEach((cat, cIndex)=>{
+            players.push({
+                name:name,
+                score:0
+            });
 
-        const cell = document.createElement("div");
-        cell.className = "cell";
-        cell.innerText = "$" + cat.questions[row].value;
+        }
 
-        cell.onclick = ()=>openQuestion(cIndex,row,cell);
+    });
 
-        board.appendChild(cell);
+    if(players.length === 0){
+
+        alert("Enter at least one player!");
+        return;
+
+    }
+
+    document.getElementById("setupScreen").style.display = "none";
+
+    document.getElementById("gameContainer").style.display = "block";
+
+    createBoard();
+
+    updateScoreboard();
+
+}
+
+// SCOREBOARD
+
+function updateScoreboard(){
+
+    const board = document.getElementById("scoreBoard");
+
+    board.innerHTML = "";
+
+    players.forEach((player,index)=>{
+
+        const div = document.createElement("div");
+
+        div.className = "playerCard";
+
+        if(index === currentPlayer){
+
+            div.classList.add("activePlayer");
+
+        }
+
+        div.innerHTML = `
+            <strong>${player.name}</strong><br>
+            $${player.score}
+        `;
+
+        board.appendChild(div);
 
     });
 
 }
 
+// CREATE BOARD
+
+function createBoard(){
+
+    const board = document.getElementById("board");
+
+    categories.forEach(cat=>{
+
+        const header = document.createElement("div");
+
+        header.className = "category";
+
+        header.innerText = cat.name;
+
+        board.appendChild(header);
+
+    });
+
+    for(let row = 0; row < 5; row++){
+
+        categories.forEach((cat,cIndex)=>{
+
+            const cell = document.createElement("div");
+
+            cell.className = "cell";
+
+            cell.innerText = "$" + cat.questions[row].value;
+
+            cell.onclick = ()=>openQuestion(cIndex,row,cell);
+
+            board.appendChild(cell);
+
+        });
+
+    }
+
+}
+
+// OPEN QUESTION
+
 function openQuestion(cIndex,qIndex,cell){
+
+    clickSound.play();
 
     const q = categories[cIndex].questions[qIndex];
 
     currentValue = q.value;
 
+    currentCorrectAnswer = q.answers[q.correct];
+
     document.getElementById("questionText").innerText = q.question;
 
-    const answersDiv = document.getElementById("answers");
-    answersDiv.innerHTML = "";
+    document.getElementById("feedback").innerHTML = "";
 
-    document.getElementById("feedback").innerText = "";
+    const answersDiv = document.getElementById("answers");
+
+    answersDiv.innerHTML = "";
 
     q.answers.forEach((ans,index)=>{
 
         const btn = document.createElement("button");
+
         btn.className = "answerBtn";
+
         btn.innerText = ans;
 
         btn.onclick = ()=>checkAnswer(index,q.correct);
@@ -386,29 +571,94 @@ function openQuestion(cIndex,qIndex,cell){
 
 }
 
+// CHECK ANSWER
+
 function checkAnswer(selected,correct){
 
     const feedback = document.getElementById("feedback");
 
     if(selected === correct){
 
+        correctSound.play();
+
         feedback.innerHTML = "✅ Correct!";
-        score += currentValue;
 
-    } else {
-
-        feedback.innerHTML = "❌ Incorrect!";
-        score -= currentValue;
+        players[currentPlayer].score += currentValue;
 
     }
 
-    document.getElementById("score").innerText = score;
+    else{
+
+        wrongSound.play();
+
+        feedback.innerHTML = "❌ Incorrect!";
+
+        players[currentPlayer].score -= currentValue;
+
+    }
+
+    currentPlayer++;
+
+    if(currentPlayer >= players.length){
+
+        currentPlayer = 0;
+
+    }
+
+    updateScoreboard();
+
+    const allUsed =
+        document.querySelectorAll(".used").length === 25;
+
+    if(allUsed){
+
+        setTimeout(endGame,1000);
+
+    }
 
 }
+
+// SHOW CORRECT ANSWER
+
+function showCorrectAnswer(){
+
+    document.getElementById("feedback").innerHTML =
+        "⭐ Correct Answer: <strong>" +
+        currentCorrectAnswer +
+        "</strong>";
+
+}
+
+// CLOSE MODAL
 
 function closeModal(){
 
     document.getElementById("questionModal").style.display = "none";
+
+}
+
+// END GAME
+
+function endGame(){
+
+    let winner = players[0];
+
+    players.forEach(player=>{
+
+        if(player.score > winner.score){
+
+            winner = player;
+
+        }
+
+    });
+
+    alert(
+        "🏆 Game Over!\n\nWinner: " +
+        winner.name +
+        "\nScore: $" +
+        winner.score
+    );
 
 }
 
